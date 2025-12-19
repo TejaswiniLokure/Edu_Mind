@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type")
 @Getter
@@ -24,8 +24,8 @@ public abstract class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "full_name")
-    private String fullName;
+//    @Column(name = "full_name")
+//    private String fullName;
 
     @Column(name = "email_id", unique = true, nullable = false)
     private String emailId;

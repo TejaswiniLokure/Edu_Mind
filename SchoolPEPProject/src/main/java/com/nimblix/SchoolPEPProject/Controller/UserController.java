@@ -30,7 +30,7 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_SUCCESS);
         response.put(SchoolConstants.MESSAGE, "School registered successfully");
-        response.put("data", school.getId());
+        response.put("data", school.getSchoolId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

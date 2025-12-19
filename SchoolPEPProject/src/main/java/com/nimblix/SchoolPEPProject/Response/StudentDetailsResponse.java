@@ -10,7 +10,8 @@ import lombok.Setter;
 public class StudentDetailsResponse {
 
     private Long id;
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private String emailId;
     private String mobile;
     private Long schoolId;

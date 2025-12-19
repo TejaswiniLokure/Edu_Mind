@@ -78,7 +78,8 @@ public class AuthController {
             // Build response
             AuthStudentResponse resp = new AuthStudentResponse();
             resp.setUserId(user.getId());
-            resp.setFullName(user.getFullName());
+            resp.setFirstName(user.getFirstName());
+            resp.setLastName(user.getLastName());
             resp.setEmail(user.getEmailId());
             resp.setRole(role);
             resp.setToken(token);

@@ -1,7 +1,18 @@
 package com.nimblix.SchoolPEPProject.Constants;
 
 public class SchoolConstants {
-    public static String TEACHER_ROLE ="Teacher" ;
+    public static final String TRAIL_END_DATE = "Trial end date";
+    public static final String DAYS_REMAINING = "Days remaining";
+    public static final String SUBSCRIPTION_PAID ="Subscription paid" ;
+    public static final int PAID_PLAN_DAYS = 30;
+    public static String PAID = "PAID";
+    public static String SUBSCRIPTION_ACTIVATED_SUCCESSFULLY ="Subscription activated successfully" ;
+    public static String SUBSCRIPTION_EXPIRED = "Subscription expired";
+    public static String TRAIL_START_DATE ="Trial start date" ;
+    public static String SUBSCRIPTION_STATUS ="Subscription status" ;
+    public static String SCHOOLS_LIST ="Schools list" ;
+    public static String SUBSCRIPTION_TRAIL ="TRIAL" ;
+    public static String TEACHER_ROLE ="TEACHER" ;
     public static  String DATA = "Data";
     public static String IN_ACTIVE ="inActive" ;
     public static String STATUS_SUCCESS ="SUCCESS" ;

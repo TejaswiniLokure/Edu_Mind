@@ -9,7 +9,8 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class AdminAccountCreateRequest {
     private String adminMobileNo;
-    private String adminName;
+    private String adminFirstName;
+    private String adminLastName;
     private String email;
     private String password;
     private String reEnterPassword;

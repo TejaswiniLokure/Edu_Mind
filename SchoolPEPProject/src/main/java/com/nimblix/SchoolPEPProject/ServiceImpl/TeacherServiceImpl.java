@@ -97,27 +97,6 @@ public class TeacherServiceImpl implements TeacherService {
 
         Map<String, String> response = new HashMap<>();
 
-        if (isEmpty(request.getClassroomName())) {
-            response.put("status", "FAIL");
-            response.put("message", "Classroom name is required");
-            return ResponseEntity.badRequest().body(response); // 400
-        }
-        if (isEmpty(request.getSchoolId())) {
-            response.put("status", "FAIL");
-            response.put("message", "School ID is required");
-            return ResponseEntity.badRequest().body(response); // 400
-        }
-        if (isEmpty(request.getTeacherId())) {
-            response.put("status", "FAIL");
-            response.put("message", "Teacher ID is required");
-            return ResponseEntity.badRequest().body(response); // 400
-        }
-        if (isEmpty(request.getSubject())) {
-            response.put("status", "FAIL");
-            response.put("message", "Subject is required");
-            return ResponseEntity.badRequest().body(response); // 400
-        }
-
         List<Classroom> existing = classroomRepository
                 .findByClassroomNameAndSchoolId(request.getClassroomName(), request.getSchoolId());
 
@@ -156,7 +135,6 @@ public class TeacherServiceImpl implements TeacherService {
                 .id(teacher.getId())
                 .firstName(teacher.getFirstName())
                 .lastName(teacher.getLastName())
-                .fullName(teacher.getFullName())
                 .emailId(teacher.getEmailId())
                 .mobile(teacher.getMobile())
                 .prefix(teacher.getPrefix())

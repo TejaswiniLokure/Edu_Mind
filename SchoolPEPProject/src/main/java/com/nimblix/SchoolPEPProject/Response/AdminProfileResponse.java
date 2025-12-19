@@ -8,7 +8,8 @@ import lombok.Setter;
 public class AdminProfileResponse {
     private Long adminId;
     private Long userId;
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private String emailId;
     private String mobile;
     private String gender;

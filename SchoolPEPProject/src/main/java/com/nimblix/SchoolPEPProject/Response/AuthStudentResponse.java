@@ -7,7 +7,8 @@ import lombok.Setter;
 @Setter
 public class AuthStudentResponse {
     private Long userId;
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private String email;
     private String role;
     private String token;

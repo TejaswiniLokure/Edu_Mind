@@ -72,7 +72,9 @@ public class AdminServiceImpl implements AdminService {
 
         // ✅ Create ONLY Admin (User fields come from parent)
         Admin admin = new Admin();
-        admin.setFullName(request.getAdminName());
+        admin.setFirstName(request.getAdminFirstName());
+        admin.setLastName(request.getAdminLastName());
+        admin.setFirstName(request.getAdminFirstName());
         admin.setEmailId(request.getEmail());
         admin.setMobile(request.getAdminMobileNo());
         admin.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -111,7 +113,8 @@ public class AdminServiceImpl implements AdminService {
 
         response.setAdminId(admin.getId());
         response.setUserId(admin.getId());
-        response.setFullName(admin.getFullName());
+        response.setFirstName(admin.getFirstName());
+        response.setLastName(admin.getLastName());
         response.setEmailId(admin.getEmailId());
         response.setMobile(admin.getMobile());
         response.setGender(admin.getGender());

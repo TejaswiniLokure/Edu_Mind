@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
@@ -14,41 +15,49 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    // Generate Token
-    public String generateToken(UserDetails userDetails) {
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    // 🔹 Generate Token
+    public String generateToken(UserDetails email) {
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(email.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // 7 days
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
+                .setExpiration(
+                        new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)
+                ) // 7 days
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Extract Username
+    // 🔹 Extract Username (email)
     public String extractUsername(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return parseClaims(token).getSubject();
     }
 
-    // Validate Token
+    // 🔹 Validate Token (ONLY JWT LEVEL)
     public boolean validateToken(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
+        try {
+            parseClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
-    // Check Expiration
-    private boolean isTokenExpired(String token) {
-        Date exp = Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
+    // 🔹 Check Expiration
+    public boolean isTokenExpired(String token) {
+        return parseClaims(token)
+                .getExpiration()
+                .before(new Date());
+    }
+
+    private Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getExpiration();
-
-        return exp.before(new Date());
+                .getBody();
     }
-
 }

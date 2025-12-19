@@ -44,12 +44,13 @@ public class StudentServiceImpl implements StudentService {
 
         // 4️⃣ Create ONLY Student
         Student student = new Student();
-        student.setFullName(request.getFullName());
+        student.setFirstName(request.getFirstName());
+        student.setLastName(request.getLastName());
         student.setEmailId(request.getEmail());
         student.setPassword(passwordEncoder.encode(request.getPassword()));
         student.setSchoolId(request.getSchoolId());
         student.setStatus(SchoolConstants.ACTIVE);
-        student.setIsLogin(false);
+        student.setIsLogin(Boolean.FALSE);
         student.setDesignation(SchoolConstants.STUDENT);
         student.setRole(studentRole);
 
@@ -64,8 +65,9 @@ public class StudentServiceImpl implements StudentService {
         Student existingStudent = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
 
-        if (request.getFullName() != null) {
-            existingStudent.setFullName(request.getFullName());
+        if(request.getFirstName()!=null && request.getLastName()!=null){
+            existingStudent.setFirstName(request.getFirstName());
+            existingStudent.setLastName(request.getLastName());
         }
 
         if (request.getEmail() != null) {
@@ -108,7 +110,8 @@ public class StudentServiceImpl implements StudentService {
         return students.stream()
                 .map(student -> StudentDetailsResponse.builder()
                         .id(student.getId())
-                        .fullName(student.getFullName())
+                        .firstName(student.getFirstName())
+                        .lastName(student.getLastName())
                         .emailId(student.getEmailId())
                         .mobile(student.getMobile())
                         .status(student.getStatus())

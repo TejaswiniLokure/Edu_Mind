@@ -8,7 +8,8 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class StudentRegistrationRequest {
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private String reEnterPassword;
