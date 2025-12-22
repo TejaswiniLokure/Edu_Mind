@@ -2,43 +2,32 @@ package com.nimblix.SchoolPEPProject.Model;
 
 import com.nimblix.SchoolPEPProject.Util.SchoolUtil;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "subjects")
+@Table(name = "home_work")
 @Getter
 @Setter
-@NoArgsConstructor
-public class Subjects {
-
-
-
+@RequiredArgsConstructor
+public class HomeWork {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "subject_name")
-    private String subjectName;
+    @Column(name = "school_id")
+    private Long schoolId;
 
-    @Column(name = "subject_code")
-    private String code;
+    @Column(name = "student_id")
+    private Long studentId;
 
-    @Column(name = "sub_desription")
-    private String subDescription;
+    @Column(name = "description")
+    private  String description;
 
-    @Column(name = "teacher_id")
-    private Long teacher;
-
-    @Column(name = "class_room_id")
-    private Long classRoomId;
-
-    @Column(name = "total_marks")
-    private  Long totalMarks;
-
-    @Column(name = "marks_obtained")
-    private Long marksObtained;
+    @Column(name = "due_date")
+    private String dueDate;
 
     @Column(name = "created_time")
     private String createdTime;
@@ -60,6 +49,4 @@ public class Subjects {
 
 
     }
-
-
 }

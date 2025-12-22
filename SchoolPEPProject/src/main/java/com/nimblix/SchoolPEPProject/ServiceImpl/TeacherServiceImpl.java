@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -31,6 +32,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final RoleRepository roleRepository;
     private final ClassroomRepository classroomRepository;
     private final PasswordEncoder passwordEncoder;
+    Map<String, String> response = new HashMap<>();
 
     @Override
     public Map<String, String> registerTeacher(TeacherRegistrationRequest request) {
@@ -142,6 +144,42 @@ public class TeacherServiceImpl implements TeacherService {
                 .gender(teacher.getGender())
                 .status(teacher.getStatus())
                 .build();
+    }
+
+    @Override
+    public Map<String, String> updateTeacherDetails(TeacherRegistrationRequest request, Long teacherId) {
+        Optional<Teacher> teacherOptional = teacherRepository.findById(teacherId);
+
+        Map<String, String> response = new HashMap<>();
+
+        if (teacherOptional.isEmpty()) {
+            response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_ERORR);
+            response.put(SchoolConstants.MESSAGE, "Teacher not found");
+            return response;
+        }
+
+        Teacher teacher = teacherOptional.get();
+        teacher.setPrefix(request.getPrefix());
+        teacher.setFirstName(request.getFirstName());
+        teacher.setLastName(request.getLastName());
+        teacher.setEmailId(request.getEmail());
+        teacher.setSchoolId(request.getSchoolId());
+        teacher.setPassword(passwordEncoder.encode(request.getPassword()));
+        teacherRepository.save(teacher);
+
+        response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_SUCCESS);
+        response.put(SchoolConstants.MESSAGE, "Teacher details updated successfully");
+        return response;
+    }
+
+    @Override
+    public Map<String, String> deleteTeacherDetails(Long teacherId, Long schoolId) {
+
+        Teacher teacher= teacherRepository.findByTeacherIdAndSchoolId(teacherId,schoolId);
+        teacherRepository.delete(teacher);
+        response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_SUCCESS);
+        response.put(SchoolConstants.MESSAGE, "Teacher details deleted successfully");
+        return response;
     }
 
 

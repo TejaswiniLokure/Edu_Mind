@@ -6,6 +6,7 @@ import com.nimblix.SchoolPEPProject.Request.TeacherRegistrationRequest;
 import com.nimblix.SchoolPEPProject.Response.TeacherDetailsResponse;
 import com.nimblix.SchoolPEPProject.Service.TeacherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,23 @@ public class TeacherController {
     }
 
 
+    @PutMapping(
+            value = "/updateTeacher",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Map<String, String> updateTeacherDetails(
+            @RequestBody TeacherRegistrationRequest request,
+            @RequestParam Long teacherId) {
+
+        return teacherService.updateTeacherDetails(request, teacherId);
+    }
+
+
+
+    @DeleteMapping("/delete")
+    public  Map<String,String> deleteTeacherRecord(@RequestParam Long teacherId, @RequestParam Long schoolId){
+        return  teacherService.deleteTeacherDetails(teacherId,schoolId);
+    }
 
 
     @PostMapping("/createClassroom")

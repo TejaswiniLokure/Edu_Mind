@@ -5,6 +5,7 @@ public class SchoolConstants {
     public static final String DAYS_REMAINING = "Days remaining";
     public static final String SUBSCRIPTION_PAID ="Subscription paid" ;
     public static final int PAID_PLAN_DAYS = 30;
+    public static final String STATUS_ERORR ="erorr" ;
     public static String PAID = "PAID";
     public static String SUBSCRIPTION_ACTIVATED_SUCCESSFULLY ="Subscription activated successfully" ;
     public static String SUBSCRIPTION_EXPIRED = "Subscription expired";

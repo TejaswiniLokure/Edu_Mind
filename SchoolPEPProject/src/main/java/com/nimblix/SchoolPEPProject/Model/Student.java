@@ -20,4 +20,18 @@ public class Student extends User {
     @Column(name = "section")
     private String section;
 
+    @Column(name = "date_of_birth")
+    private String dateOfBirth;
+
+    @Column(name = "roll_no")
+    private Long rollNo;
+
+    @Column(name = "admission_no")
+    private Long admissionNo;
+
+    @Column(name = "registration_no")
+    private Long registrationNo;
+
+
+
 }

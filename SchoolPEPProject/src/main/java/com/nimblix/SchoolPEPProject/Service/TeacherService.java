@@ -16,4 +16,8 @@ public interface TeacherService {
     ResponseEntity<Map<String, String>> createClassroom(ClassroomRequest request);
 
     public TeacherDetailsResponse getTeacherDetails(Long teacherId);
+
+    Map<String, String> updateTeacherDetails(TeacherRegistrationRequest request, Long teacherId);
+
+    Map<String, String> deleteTeacherDetails(Long teacherId, Long schoolId);
 }
