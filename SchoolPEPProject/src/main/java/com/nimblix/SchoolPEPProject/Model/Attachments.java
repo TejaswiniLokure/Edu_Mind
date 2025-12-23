@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Attachment")
+@Table(name = "attachments")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,29 +23,24 @@ public class Attachments {
     @Column(name = "file_url")
     private String fileUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "task_id")
-    private Task task;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assignment_id", nullable = false)
+    private Assignments assignment;
 
-    @Column(name = "created_time")
+    @Column(name = "created_time", updatable = false)
     private String createdTime;
 
     @Column(name = "updated_time")
     private String updatedTime;
 
-
     @PrePersist
-    protected void onCreate(){
-        createdTime= SchoolUtil.changeCurrentTimeToLocalDateFromGmtToISTInString();
-        updatedTime= SchoolUtil.changeCurrentTimeToLocalDateFromGmtToISTInString();
-
+    protected void onCreate() {
+        createdTime = SchoolUtil.changeCurrentTimeToLocalDateFromGmtToISTInString();
+        updatedTime = createdTime;
     }
 
     @PreUpdate
-    protected void onUpdate(){
-        this.updatedTime= SchoolUtil.changeCurrentTimeToLocalDateFromGmtToISTInString();
-
-
+    protected void onUpdate() {
+        updatedTime = SchoolUtil.changeCurrentTimeToLocalDateFromGmtToISTInString();
     }
-
 }

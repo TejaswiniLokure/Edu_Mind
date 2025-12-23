@@ -15,4 +15,7 @@ import lombok.Setter;
 public class Admin extends User {
 
 
+    @Column(name = "admin_id")
+    private String adminId;
+
 }

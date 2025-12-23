@@ -1,8 +1,10 @@
 package com.nimblix.SchoolPEPProject.Model;
 
-import com.nimblix.SchoolPEPProject.Util.SchoolUtil;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "students")
@@ -13,6 +15,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Student extends User {
+
+
+    @Column(name = "student_id")
+    private String studentId;
 
     @Column(name = "class_id")
     private Long classId;
@@ -32,6 +38,6 @@ public class Student extends User {
     @Column(name = "registration_no")
     private Long registrationNo;
 
-
-
+    @ManyToMany(mappedBy = "students")
+    private List<Parent> parents = new ArrayList<>();
 }

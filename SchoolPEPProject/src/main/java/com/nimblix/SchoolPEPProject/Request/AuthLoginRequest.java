@@ -7,8 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class AuthStudentRequest {
-	private String fullName;
+public class AuthLoginRequest {
     private String email;
     private String password;
+    private String role;
+
 }

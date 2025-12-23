@@ -21,7 +21,7 @@ public class Classroom {
     private String classroomName;
 
     @Column(name = "school_id")
-    private String schoolId;
+    private Long schoolId;
 
     @Column(name = "teacher_id")
     private String teacherId;

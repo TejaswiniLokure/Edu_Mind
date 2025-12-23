@@ -3,16 +3,17 @@ package com.nimblix.SchoolPEPProject.Controller;
 import com.nimblix.SchoolPEPProject.Constants.SchoolConstants;
 import com.nimblix.SchoolPEPProject.Model.User;
 import com.nimblix.SchoolPEPProject.Repository.UserRepository;
-import com.nimblix.SchoolPEPProject.Request.AuthStudentRequest;
-import com.nimblix.SchoolPEPProject.Response.AuthStudentResponse;
+import com.nimblix.SchoolPEPProject.Request.AuthLoginRequest;
+import com.nimblix.SchoolPEPProject.Response.AuthLoginResponse;
 import com.nimblix.SchoolPEPProject.Security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,35 +26,49 @@ public class AuthController {
     private final UserRepository userRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthStudentRequest request) {
+    public ResponseEntity<?> login(@RequestBody AuthLoginRequest request) {
 
         try {
-            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            // 1️⃣ Validate email
+            if (request.getEmail() == null || request.getEmail().isBlank()) {
                 return ResponseEntity.badRequest()
-                        .body(Collections.singletonMap(SchoolConstants.MESSAGE, "Email is required."));
+                        .body(Map.of(SchoolConstants.MESSAGE, "Email is required"));
             }
 
-            // Fetch from DB
+            // 2️⃣ Validate role
+            if (request.getRole() == null || request.getRole().isBlank()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of(SchoolConstants.MESSAGE, "Role is required"));
+            }
+
+            // 3️⃣ Fetch user
             User user = userRepository
                     .findByEmailId(request.getEmail())
-                    .filter(u -> u.getStatus().equalsIgnoreCase(SchoolConstants.ACTIVE))
+                    .filter(u -> SchoolConstants.ACTIVE.equalsIgnoreCase(u.getStatus()))
                     .orElse(null);
 
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Collections.singletonMap("message", "User not found or inactive."));
+                        .body(Map.of("message", "User not found or inactive"));
             }
 
-            String role = user.getRole().getRoleName().toUpperCase();
+            String dbRole = user.getRole().getRoleName().toUpperCase();
+            String requestRole = request.getRole().toUpperCase();
 
-            if (role.equals(SchoolConstants.STUDENT)) {
+            // 4️⃣ Role validation
+            if (!dbRole.equals(requestRole)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Role mismatch"));
+            }
 
-                if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+            // 5️⃣ Password check ONLY for STUDENT
+            if (SchoolConstants.STUDENT.equals(dbRole)) {
+
+                if (request.getPassword() == null || request.getPassword().isBlank()) {
                     return ResponseEntity.badRequest()
-                            .body(Collections.singletonMap("message", "Password is required for Student login."));
+                            .body(Map.of("message", "Password is required for student login"));
                 }
 
-                // Authenticate
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
                                 request.getEmail(),
@@ -62,37 +77,35 @@ public class AuthController {
                 );
             }
 
-            else {
-                // No password check — allow login by email only
-                System.out.println(role + " logged in using email only");
-            }
+            // 6️⃣ Generate JWT
+            UserDetails userDetails =
+                    userDetailsService.loadUserByUsername(request.getEmail());
 
-            // Generate JWT token
-            var userDetails = userDetailsService.loadUserByUsername(request.getEmail());
             String token = jwtUtil.generateToken(userDetails);
 
-            // Update login status
+            // 7️⃣ Update login flag
             user.setIsLogin(true);
             userRepository.save(user);
 
-            // Build response
-            AuthStudentResponse resp = new AuthStudentResponse();
-            resp.setUserId(user.getId());
-            resp.setFirstName(user.getFirstName());
-            resp.setLastName(user.getLastName());
-            resp.setEmail(user.getEmailId());
-            resp.setRole(role);
-            resp.setToken(token);
+            // 8️⃣ Build response
+            AuthLoginResponse response = new AuthLoginResponse();
+            response.setUserId(user.getId());
+            response.setFirstName(user.getFirstName());
+            response.setLastName(user.getLastName());
+            response.setEmail(user.getEmailId());
+            response.setRole(dbRole);
+            response.setToken(token);
 
-            return ResponseEntity.ok(resp);
+            return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Collections.singletonMap("message", "Incorrect password."));
+                    .body(Map.of("message", "Invalid password"));
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.singletonMap("message", "Login failed."));
+                    .body(Map.of("message", "Login failed"));
         }
     }
+
 }

@@ -2,7 +2,6 @@ package com.nimblix.SchoolPEPProject.Model;
 
 
 
-import com.nimblix.SchoolPEPProject.Util.SchoolUtil;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +18,12 @@ import java.util.List;
 @NoArgsConstructor
 public class Teacher extends User {
 
+
+    @Column(name = "teacher_id")
+    private String teacherId;
+
     @Column(name = "prefix")
     private String prefix;
-
 
     @OneToMany(mappedBy = "teacher")
     private List<Subjects> subjects = new ArrayList<>();

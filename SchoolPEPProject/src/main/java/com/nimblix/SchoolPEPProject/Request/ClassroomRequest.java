@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class ClassroomRequest {
     private String classroomName;
-    private String schoolId;
+    private Long schoolId;
     private String subject;
     private String teacherId;
 }

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AuthStudentResponse {
+public class AuthLoginResponse {
     private Long userId;
     private String firstName;
     private String lastName;

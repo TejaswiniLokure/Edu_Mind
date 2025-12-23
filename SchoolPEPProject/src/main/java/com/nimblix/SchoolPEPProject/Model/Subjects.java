@@ -28,8 +28,10 @@ public class Subjects {
     @Column(name = "sub_desription")
     private String subDescription;
 
-    @Column(name = "teacher_id")
-    private Long teacher;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
 
     @Column(name = "class_room_id")
     private Long classRoomId;
