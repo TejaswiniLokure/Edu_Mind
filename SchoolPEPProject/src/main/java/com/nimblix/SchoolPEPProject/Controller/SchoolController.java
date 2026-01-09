@@ -81,55 +81,30 @@ public class SchoolController {
         );
     }
 
-
     @PostMapping("/subscribe")
-    public ResponseEntity<Map<String, Object>> subscribe(
+    public ResponseEntity<?> subscribe(
             @RequestBody SubscriptionRequest request) {
 
         School school = schoolService.getLoggedInSchool();
-
         schoolService.activatePaidSubscription(school, request);
 
-        return ResponseEntity.ok(
-                Map.of(
-                        SchoolConstants.STATUS, SchoolConstants.STATUS_SUCCESS,
-                        SchoolConstants.MESSAGE,
-                        SchoolConstants.SUBSCRIPTION_ACTIVATED_SUCCESSFULLY,
-                        SchoolConstants.SUBSCRIPTION_STATUS,
-                        SchoolConstants.PAID
-                )
-        );
+        return ResponseEntity.ok(Map.of(
+                SchoolConstants.STATUS_SUCCESS, "SUCCESS",
+                SchoolConstants.MESSAGE, "Subscription activated"
+        ));
     }
-
 
     @GetMapping("/subscription")
-    public ResponseEntity<Map<String, Object>> getSubscriptionStatus() {
+    public ResponseEntity<?> status() {
 
         School school = schoolService.getLoggedInSchool();
-
         schoolService.validateSubscription(school);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put(
-                SchoolConstants.SUBSCRIPTION_STATUS,
-                school.getSubscriptionStatus()
-        );
-        response.put(
-                SchoolConstants.TRAIL_START_DATE,
-                school.getTrialStartDate()
-        );
-        response.put(
-                SchoolConstants.TRAIL_END_DATE,
-                school.getTrialEndDate()
-        );
-        response.put(
-                SchoolConstants.DAYS_REMAINING,
-                SchoolUtil.daysRemaining(school.getTrialEndDate())
-        );
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Map.of(
+                SchoolConstants.SUBSCRIPTION_STATUS, school.getSubscriptionStatus(),
+                "trialEndDate", school.getTrialEndDate()
+        ));
     }
-
 
 
 

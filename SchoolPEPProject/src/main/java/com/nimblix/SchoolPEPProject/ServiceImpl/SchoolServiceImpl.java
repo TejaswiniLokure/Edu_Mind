@@ -162,19 +162,21 @@ public class SchoolServiceImpl implements SchoolService {
 
         if (now.isAfter(trialEnd)) {
 
-            if (!SchoolConstants.SUBSCRIPTION_EXPIRED
+            if (!SchoolConstants.PAID
                     .equals(school.getSubscriptionStatus())) {
 
-                school.setSubscriptionStatus(SchoolConstants.SUBSCRIPTION_EXPIRED);
+                school.setSubscriptionStatus(
+                        SchoolConstants.SUBSCRIPTION_EXPIRED);
                 school.setIsActive(false);
                 schoolRepository.save(school);
-            }
 
-            throw new RuntimeException(
-                    "Free trial expired. Please subscribe to continue."
-            );
+                throw new RuntimeException(
+                        "Free trial expired. Please subscribe."
+                );
+            }
         }
     }
+
     @Override
     public School getLoggedInSchool() {
 
@@ -218,7 +220,6 @@ public class SchoolServiceImpl implements SchoolService {
             throw new RuntimeException("Active subscription already exists");
         }
 
-        // 🔹 Validate payment (mock)
         if (request.getAmount() == null || request.getAmount() <= 0) {
             throw new RuntimeException("Invalid amount");
         }
@@ -227,7 +228,6 @@ public class SchoolServiceImpl implements SchoolService {
             throw new RuntimeException("Payment reference required");
         }
 
-        // 🔹 Create new subscription
         SchoolSubscription subscription =
                 SchoolSubscription.builder()
                         .schoolId(school.getSchoolId())
@@ -236,12 +236,15 @@ public class SchoolServiceImpl implements SchoolService {
                         .paymentRef(request.getPaymentRef())
                         .paymentStatus(SchoolConstants.ACTIVE)
                         .startDate(SchoolUtil.nowIST())
-                        .endDate(SchoolUtil.plusDaysIST(365))
+                        .endDate(
+                                request.getPlanType().equals("MONTHLY")
+                                        ? SchoolUtil.plusDaysIST(30)
+                                        : SchoolUtil.plusDaysIST(365)
+                        )
                         .build();
 
         schoolSubscriptionRepository.save(subscription);
 
-        // 🔹 Update school status
         school.setSubscriptionStatus(SchoolConstants.PAID);
         school.setIsActive(true);
         schoolRepository.save(school);
