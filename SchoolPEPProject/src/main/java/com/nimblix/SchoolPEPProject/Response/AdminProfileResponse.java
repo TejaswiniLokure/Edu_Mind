@@ -1,5 +1,6 @@
 package com.nimblix.SchoolPEPProject.Response;
 
+import com.nimblix.SchoolPEPProject.Model.Designation;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,7 @@ public class AdminProfileResponse {
     private String emailId;
     private String mobile;
     private String gender;
-    private String designation;
+    private Designation designation;
     private String profilePicture;
     private Long schoolId;
 }

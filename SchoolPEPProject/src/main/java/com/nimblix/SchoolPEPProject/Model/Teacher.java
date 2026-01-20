@@ -12,14 +12,16 @@ import java.util.List;
 
 @Entity
 @Table(name = "teachers")
-@DiscriminatorValue("TEACHER")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Teacher extends User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "teacher_id")
+    @Column(name = "teacher_id", unique = true)
     private String teacherId;
 
     @Column(name = "prefix")

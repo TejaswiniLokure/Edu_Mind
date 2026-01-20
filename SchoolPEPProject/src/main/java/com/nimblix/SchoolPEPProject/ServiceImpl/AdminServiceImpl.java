@@ -1,14 +1,13 @@
 package com.nimblix.SchoolPEPProject.ServiceImpl;
 
 import com.nimblix.SchoolPEPProject.Constants.SchoolConstants;
-import com.nimblix.SchoolPEPProject.Model.Admin;
-import com.nimblix.SchoolPEPProject.Model.Role;
-import com.nimblix.SchoolPEPProject.Model.Student;
-import com.nimblix.SchoolPEPProject.Model.User;
+import com.nimblix.SchoolPEPProject.Enum.StaffType;
+import com.nimblix.SchoolPEPProject.Model.*;
 import com.nimblix.SchoolPEPProject.Repository.AdminRepository;
+import com.nimblix.SchoolPEPProject.Repository.DesignationRepository;
 import com.nimblix.SchoolPEPProject.Repository.RoleRepository;
 import com.nimblix.SchoolPEPProject.Repository.StudentRepository;
-import com.nimblix.SchoolPEPProject.Repository.UserRepository;
+//import com.nimblix.SchoolPEPProject.Repository.UserRepository;
 import com.nimblix.SchoolPEPProject.Request.AdminAccountCreateRequest;
 import com.nimblix.SchoolPEPProject.Response.AdminProfileResponse;
 import com.nimblix.SchoolPEPProject.Service.AdminService;
@@ -26,6 +25,7 @@ public class AdminServiceImpl implements AdminService {
     private final RoleRepository roleRepository;
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final DesignationRepository designationRepository;
 
     @Override
     public String submitEmail(String email) {
@@ -70,19 +70,24 @@ public class AdminServiceImpl implements AdminService {
 
         Role role = roleRepository.findByRoleName(SchoolConstants.ADMIN_ROLE);
 
-        // ✅ Create ONLY Admin (User fields come from parent)
+        Designation adminDesignation =
+                designationRepository
+                        .findByDesignationName(SchoolConstants.ADMIN)
+                        .orElseThrow(() ->
+                                new RuntimeException("Admin designation not found"));
+
         Admin admin = new Admin();
         admin.setFirstName(request.getAdminFirstName());
         admin.setLastName(request.getAdminLastName());
-        admin.setFirstName(request.getAdminFirstName());
         admin.setEmailId(request.getEmail());
         admin.setMobile(request.getAdminMobileNo());
         admin.setPassword(passwordEncoder.encode(request.getPassword()));
 
         admin.setRole(role);
+        admin.setStaffType(StaffType.NON_TEACHING);
+        admin.setDesignation(adminDesignation);
         admin.setStatus(SchoolConstants.STATUS);
         admin.setIsLogin(false);
-        admin.setDesignation(SchoolConstants.ADMIN_ROLE);
 
         Admin savedAdmin = adminRepository.save(admin);
 

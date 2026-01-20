@@ -6,16 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "admins")
+@Table(name = "non_teaching_staff")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Admin extends User {
+public class NonTeachingStaff extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "admin_id", unique = true)
-    private String adminId;
+    @Column(name = "staff_code", unique = true)
+    private String staffCode;
 }

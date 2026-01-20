@@ -14,5 +14,6 @@ public class TeacherRegistrationRequest {
     private String email;
     private String password;
     private  Long schoolId;
+    private String designation;
 
 }

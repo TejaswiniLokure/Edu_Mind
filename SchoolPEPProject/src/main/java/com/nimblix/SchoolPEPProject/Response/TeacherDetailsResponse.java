@@ -1,5 +1,7 @@
 package com.nimblix.SchoolPEPProject.Response;
 
+import com.nimblix.SchoolPEPProject.Model.Designation;
+import com.nimblix.SchoolPEPProject.Repository.DesignationRepository;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +17,7 @@ public class TeacherDetailsResponse {
     private String emailId;
     private String mobile;
     private String prefix;
-    private String designation;
+    private Designation designation;
     private String gender;
     private String status;
 }

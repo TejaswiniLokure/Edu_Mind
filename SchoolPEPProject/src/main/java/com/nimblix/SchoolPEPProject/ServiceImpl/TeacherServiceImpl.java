@@ -1,6 +1,7 @@
 package com.nimblix.SchoolPEPProject.ServiceImpl;
 
 import com.nimblix.SchoolPEPProject.Constants.SchoolConstants;
+import com.nimblix.SchoolPEPProject.Enum.StaffType;
 import com.nimblix.SchoolPEPProject.Exception.UserNotFoundException;
 import com.nimblix.SchoolPEPProject.Helper.UploadImageHelper;
 import com.nimblix.SchoolPEPProject.Model.*;
@@ -34,7 +35,7 @@ import java.util.Optional;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SchoolRepository schoolRepository;
     private final SubjectRepository subjectRepository;
@@ -43,6 +44,8 @@ public class TeacherServiceImpl implements TeacherService {
     private final AssignmentsRepository assignmentsRepository;
     private final PasswordEncoder passwordEncoder;
     private final UploadImageHelper  uploadImageHelper;
+    private final DesignationRepository designationRepository;
+
     Map<String, String> response = new HashMap<>();
 
     @Override
@@ -69,7 +72,16 @@ public class TeacherServiceImpl implements TeacherService {
             return response;
         }
 
-        Role teacherRole = roleRepository.findByRoleName(SchoolConstants.TEACHER_ROLE);
+        // SECURITY ROLE
+        Role teacherRole =
+                roleRepository.findByRoleName(SchoolConstants.TEACHER_ROLE);
+
+        // BUSINESS DESIGNATION
+        Designation teacherDesignation =
+                designationRepository
+                        .findByDesignationName(request.getDesignation()) // e.g. Lecturer, HOD
+                        .orElseThrow(() ->
+                                new RuntimeException("Teacher designation not found"));
 
         Teacher teacher = new Teacher();
         teacher.setPrefix(request.getPrefix());
@@ -79,8 +91,11 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setPassword(passwordEncoder.encode(request.getPassword()));
         teacher.setSchoolId(1L); // TODO: get from logged-in admin
 
+        // ✅ IMPORTANT FIXES
+        teacher.setStaffType(StaffType.TEACHING);
+        teacher.setDesignation(teacherDesignation);
+
         teacher.setRole(teacherRole);
-        teacher.setDesignation(SchoolConstants.TEACHER_ROLE);
         teacher.setStatus(SchoolConstants.ACTIVE);
         teacher.setIsLogin(Boolean.FALSE);
 
@@ -92,12 +107,15 @@ public class TeacherServiceImpl implements TeacherService {
         );
 
         savedTeacher.setTeacherId(teacherId);
-
         teacherRepository.save(savedTeacher);
 
-        response.put(SchoolConstants.MESSAGE, "Teacher Registered Successfully!");
+        response.put(
+                SchoolConstants.MESSAGE,
+                "Teacher Registered Successfully!"
+        );
         return response;
     }
+
 
 
 //    @Override
@@ -229,13 +247,6 @@ public class TeacherServiceImpl implements TeacherService {
             throw new IllegalArgumentException("Invalid Subject ID for given Class");
         }
 
-        log.info("Subject Id is "+request.getSubjectId());
-        if (!userRepository.existsByIdAndRole_RoleName(
-                request.getCreatedByUserId(),
-                SchoolConstants.TEACHER_ROLE)) {
-            throw new IllegalArgumentException("Invalid Teacher ID");
-        }
-
         Assignments assignment = new Assignments();
         assignment.setAssignmentName(request.getAssignmentName());
         assignment.setDescription(request.getDescription());
@@ -346,13 +357,6 @@ public class TeacherServiceImpl implements TeacherService {
                 request.getSubjectId(),
                 request.getClassId())) {
             throw new IllegalArgumentException("Invalid Subject ID for given Class");
-        }
-
-        // 5️⃣ Validate teacher
-        if (!userRepository.existsByIdAndRole_RoleName(
-                request.getCreatedByUserId(),
-                SchoolConstants.TEACHER_ROLE)) {
-            throw new IllegalArgumentException("Invalid Teacher ID");
         }
 
         // 6️⃣ Update assignment fields

@@ -9,10 +9,11 @@ import com.nimblix.SchoolPEPProject.Model.User;
 import com.nimblix.SchoolPEPProject.Repository.SchoolEmailOtpRepository;
 import com.nimblix.SchoolPEPProject.Repository.SchoolRepository;
 import com.nimblix.SchoolPEPProject.Repository.SchoolSubscriptionRepository;
-import com.nimblix.SchoolPEPProject.Repository.UserRepository;
+//import com.nimblix.SchoolPEPProject.Repository.UserRepository;
 import com.nimblix.SchoolPEPProject.Request.SchoolRegistrationRequest;
 import com.nimblix.SchoolPEPProject.Request.SubscriptionRequest;
 import com.nimblix.SchoolPEPProject.Response.SchoolListResponse;
+import com.nimblix.SchoolPEPProject.Security.CustomUserDetails;
 import com.nimblix.SchoolPEPProject.Service.SchoolService;
 import com.nimblix.SchoolPEPProject.Util.SchoolUtil;
 import jakarta.transaction.Transactional;
@@ -33,7 +34,7 @@ public class SchoolServiceImpl implements SchoolService {
 
     private final SchoolRepository schoolRepository;
     private final MailHelper mailHelper;
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
     private  final SchoolEmailOtpRepository schoolEmailOtpRepository;
     private final SchoolSubscriptionRepository schoolSubscriptionRepository;
     @Override
@@ -176,31 +177,31 @@ public class SchoolServiceImpl implements SchoolService {
             }
         }
     }
-
     @Override
     public School getLoggedInSchool() {
 
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || authentication.getPrincipal().equals("anonymousUser")) {
             throw new RuntimeException("Unauthorized");
         }
 
-        String email = authentication.getName();
+        CustomUserDetails userDetails =
+                (CustomUserDetails) authentication.getPrincipal();
 
-        User user = userRepository
-                .findByEmailIdIgnoreCase(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long schoolId = userDetails.getSchoolId();
 
-        if (user.getSchoolId() == null) {
+        if (schoolId == null) {
             throw new RuntimeException("User is not linked to any school");
         }
 
         return schoolRepository
-                .findById(user.getSchoolId())
+                .findById(schoolId)
                 .orElseThrow(() -> new RuntimeException("School not found"));
     }
+
 
 
     @Override

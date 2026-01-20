@@ -1,31 +1,21 @@
 package com.nimblix.SchoolPEPProject.Model;
 
+import com.nimblix.SchoolPEPProject.Enum.StaffType;
 import com.nimblix.SchoolPEPProject.Util.SchoolUtil;
 import jakarta.persistence.*;
 import lombok.*;
-
-@Entity
-@Table(name = "user")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "user_type")
+@MappedSuperclass
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User {
 
     @Column(name = "first_name")
     private String firstName;
 
     @Column(name = "last_name")
     private String lastName;
-
-//    @Column(name = "full_name")
-//    private String fullName;
 
     @Column(name = "email_id", unique = true, nullable = false)
     private String emailId;
@@ -45,8 +35,15 @@ public abstract class User {
     @Column(name = "is_login")
     private Boolean isLogin;
 
-    @Column(name = "designation")
-    private String designation;
+    /** MAIN CATEGORY */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "staff_type")
+    private StaffType staffType;
+
+
+    @ManyToOne
+    @JoinColumn(name = "designation_id")
+    private Designation designation;
 
     @Column(name = "gender")
     private String gender;

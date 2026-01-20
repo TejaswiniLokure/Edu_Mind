@@ -1,5 +1,7 @@
 package com.nimblix.SchoolPEPProject.Constants;
 
+import com.nimblix.SchoolPEPProject.Model.Designation;
+
 public class SchoolConstants {
     public static final String TRAIL_END_DATE = "Trial end date";
     public static final String DAYS_REMAINING = "Days remaining";
@@ -10,6 +12,8 @@ public class SchoolConstants {
     public static final String ASSIGNMENT_ID ="assignmentId" ;
     public static final String PARENT = "PARENT";
     public static final String LOGIN_FAILED ="Login failed" ;
+    public static final String ADMIN ="ADMIN";
+    public static final String TEACHER ="TEACHER" ;
     public static String ROLE_MISMATCH ="Role mismatch" ;
     public static String PAID = "PAID";
     public static String SUBSCRIPTION_ACTIVATED_SUCCESSFULLY ="Subscription activated successfully" ;
@@ -22,13 +26,13 @@ public class SchoolConstants {
     public static  String DATA = "Data";
     public static String IN_ACTIVE ="inActive" ;
     public static String STATUS_SUCCESS ="SUCCESS" ;
-    public static String STUDENT ="STUDENT" ;
+    public static final String STUDENT ="STUDENT" ;
     public static String STUDENT_NOT_FOUND ="Student not found" ;
     public static String STATUS_FAILURE ="FAILED" ;
     public static  String STATUS ="status" ;
     public static String ACTIVE = "active";
     public static String MESSAGE ="message: " ;
-    public static String ADMIN_ROLE="ADMIN";
+    public static final String ADMIN_ROLE="ADMIN";
     public static String USER_NOT_FOUND = "user not found: " ;
     public static final String PRESENT = "PRESENT";
     public static final String ABSENT = "ABSENT";

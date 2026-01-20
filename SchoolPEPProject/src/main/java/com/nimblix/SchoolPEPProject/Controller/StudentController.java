@@ -65,27 +65,25 @@ public class StudentController {
     }
 
 
-
-
     @PostMapping("/update")
-        public ResponseEntity<?> updateStudent(
-                @RequestParam Long studentId,
-                @RequestBody StudentRegistrationRequest request) {
+    public ResponseEntity<?> updateStudent(
+            @RequestParam Long studentId,
+            @RequestBody StudentRegistrationRequest request) {
 
-            Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
 
-            try {
-                studentService.updateStudentDetails(studentId, request);
-                response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_SUCCESS);
-                response.put(SchoolConstants.MESSAGE, "Student updated successfully");
-                return ResponseEntity.ok(response);
+        try {
+            studentService.updateStudentDetails(studentId, request);
+            response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_SUCCESS);
+            response.put(SchoolConstants.MESSAGE, "Student updated successfully");
+            return ResponseEntity.ok(response);
 
-            } catch (Exception e) {
-                response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_FAILURE);
-                response.put(SchoolConstants.MESSAGE, e.getMessage());
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
+        } catch (Exception e) {
+            response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_FAILURE);
+            response.put(SchoolConstants.MESSAGE, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
 
 
 

@@ -7,18 +7,19 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
 @Entity
 @Table(name = "parents")
-@DiscriminatorValue("PARENT")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Parent extends User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "parent_id")
+    @Column(name = "parent_id", unique = true)
     private String parentId;
 
     @Enumerated(EnumType.STRING)
@@ -27,11 +28,8 @@ public class Parent extends User {
     @ManyToMany
     @JoinTable(
             name = "parent_student_map",
-            joinColumns = @JoinColumn(name = "parent_user_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_user_id")
+            joinColumns = @JoinColumn(name = "parent_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     private List<Student> students = new ArrayList<>();
-    @Column(name = "address")
-    private String address;
 }
-

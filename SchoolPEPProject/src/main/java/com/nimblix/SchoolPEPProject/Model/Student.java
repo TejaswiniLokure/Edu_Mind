@@ -8,7 +8,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "students")
-@DiscriminatorValue("STUDENT")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,8 +15,11 @@ import java.util.List;
 @Builder
 public class Student extends User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "student_id")
+    @Column(name = "student_id", unique = true)
     private String studentId;
 
     @Column(name = "class_id")

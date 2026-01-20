@@ -1,12 +1,15 @@
 package com.nimblix.SchoolPEPProject.ServiceImpl;
 import com.nimblix.SchoolPEPProject.Constants.SchoolConstants;
+import com.nimblix.SchoolPEPProject.Enum.StaffType;
 import com.nimblix.SchoolPEPProject.Exception.UserNotFoundException;
+import com.nimblix.SchoolPEPProject.Model.Designation;
 import com.nimblix.SchoolPEPProject.Model.Role;
 import com.nimblix.SchoolPEPProject.Model.Student;
 import com.nimblix.SchoolPEPProject.Model.User;
+import com.nimblix.SchoolPEPProject.Repository.DesignationRepository;
 import com.nimblix.SchoolPEPProject.Repository.RoleRepository;
 import com.nimblix.SchoolPEPProject.Repository.StudentRepository;
-import com.nimblix.SchoolPEPProject.Repository.UserRepository;
+//import com.nimblix.SchoolPEPProject.Repository.UserRepository;
 import com.nimblix.SchoolPEPProject.Request.StudentRegistrationRequest;
 import com.nimblix.SchoolPEPProject.Response.StudentDetailsResponse;
 import com.nimblix.SchoolPEPProject.Service.StudentService;
@@ -25,6 +28,7 @@ public class StudentServiceImpl implements StudentService {
     private final PasswordEncoder passwordEncoder;
     private final StudentRepository studentRepository;
     private final RoleRepository roleRepository;
+    private final DesignationRepository designationRepository;
 
     @Override
     public ResponseEntity<?> registerStudent(StudentRegistrationRequest request) {
@@ -39,24 +43,37 @@ public class StudentServiceImpl implements StudentService {
                     .body("Email already registered!");
         }
 
-        // 3️⃣ Fetch role
-        Role studentRole = roleRepository.findByRoleName(SchoolConstants.STUDENT);
+        // Fetch role (SECURITY)
+        Role studentRole =
+                roleRepository.findByRoleName(SchoolConstants.STUDENT);
 
-        // 4️⃣ Create ONLY Student
+        // Fetch designation (BUSINESS)
+        Designation studentDesignation =
+                designationRepository
+                        .findByDesignationName(SchoolConstants.STUDENT)
+                        .orElseThrow(() ->
+                                new RuntimeException("Student designation not found"));
+
         Student student = new Student();
         student.setFirstName(request.getFirstName());
         student.setLastName(request.getLastName());
         student.setEmailId(request.getEmail());
         student.setPassword(passwordEncoder.encode(request.getPassword()));
         student.setSchoolId(request.getSchoolId());
+
         student.setStatus(SchoolConstants.ACTIVE);
         student.setIsLogin(Boolean.FALSE);
-        student.setDesignation(SchoolConstants.STUDENT);
+
+        // ✅ IMPORTANT FIXES
+        student.setStaffType(StaffType.NON_TEACHING); // Students are NOT staff
+        student.setDesignation(studentDesignation);
         student.setRole(studentRole);
 
         Student savedStudent = studentRepository.save(student);
 
-        return ResponseEntity.ok("Student registered successfully with ID: " + savedStudent.getId());
+        return ResponseEntity.ok(
+                "Student registered successfully with ID: " + savedStudent.getId()
+        );
     }
 
     @Override
@@ -130,7 +147,8 @@ public class StudentServiceImpl implements StudentService {
                 .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
 
         // Soft delete
-        student.setStatus(SchoolConstants.IN_ACTIVE);
-        studentRepository.save(student);
+//        student.setStatus(SchoolConstants.IN_ACTIVE);
+        studentRepository.delete(student);
+//        studentRepository.save(student);
     }
 }

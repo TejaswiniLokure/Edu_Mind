@@ -81,11 +81,13 @@ public class SchoolController {
         );
     }
 
+
     @PostMapping("/subscribe")
     public ResponseEntity<?> subscribe(
             @RequestBody SubscriptionRequest request) {
 
         School school = schoolService.getLoggedInSchool();
+
         schoolService.activatePaidSubscription(school, request);
 
         return ResponseEntity.ok(Map.of(
@@ -94,10 +96,12 @@ public class SchoolController {
         ));
     }
 
+
     @GetMapping("/subscription")
     public ResponseEntity<?> status() {
 
         School school = schoolService.getLoggedInSchool();
+
         schoolService.validateSubscription(school);
 
         return ResponseEntity.ok(Map.of(
@@ -105,7 +109,6 @@ public class SchoolController {
                 "trialEndDate", school.getTrialEndDate()
         ));
     }
-
 
 
 
