@@ -9,7 +9,6 @@ import com.nimblix.SchoolPEPProject.Security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;

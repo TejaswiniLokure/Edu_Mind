@@ -22,6 +22,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AdminNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleAdminNotFound(UserNotFoundException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.NOT_FOUND.value());
+        response.put("error", "Not Found");
+        response.put("message", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+
     // 400 - Bad request (invalid inputs)
     @ExceptionHandler({
             IllegalArgumentException.class,

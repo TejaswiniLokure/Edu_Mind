@@ -2,7 +2,6 @@ package com.nimblix.SchoolPEPProject.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimblix.SchoolPEPProject.Constants.SchoolConstants;
-import com.nimblix.SchoolPEPProject.Model.Teacher;
 import com.nimblix.SchoolPEPProject.Request.ClassroomRequest;
 import com.nimblix.SchoolPEPProject.Request.CreateAssignmentRequest;
 import com.nimblix.SchoolPEPProject.Request.OnboardSubjectRequest;
