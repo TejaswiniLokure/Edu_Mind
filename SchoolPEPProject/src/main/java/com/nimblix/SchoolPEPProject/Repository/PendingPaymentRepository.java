@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface PendingPaymentRepository extends JpaRepository<PendingPayment, Long> {
 
-    Optional<PendingPayment> findByStripePaymentIntentId(String stripePaymentIntentId);
+    Optional<PendingPayment> findByRazorpayOrderId(String razorpayOrderId);
 }

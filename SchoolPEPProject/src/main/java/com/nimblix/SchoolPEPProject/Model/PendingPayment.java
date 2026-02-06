@@ -26,8 +26,8 @@ public class PendingPayment {
     @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @Column(name = "stripe_payment_intent_id", unique = true, nullable = false)
-    private String stripePaymentIntentId;
+    @Column(name = "razorpay_order_id", unique = true, nullable = false)
+    private String razorpayOrderId;
 
     @Column(name = "created_time")
     private String createdTime;
@@ -40,7 +40,7 @@ public class PendingPayment {
         createdTime = SchoolUtil.changeCurrentTimeToLocalDateFromGmtToISTInString();
     }
 
-    @PostPersist
+    @PreUpdate
     protected void onUpdate() {
         updatedTime = SchoolUtil.changeCurrentTimeToLocalDateFromGmtToISTInString();
     }

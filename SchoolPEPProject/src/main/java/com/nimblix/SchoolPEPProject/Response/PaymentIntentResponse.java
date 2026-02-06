@@ -13,8 +13,10 @@ import lombok.Setter;
 @Builder
 public class PaymentIntentResponse {
 
-    private String clientSecret;
-    private String paymentIntentId;
+    // For Razorpay: this is the public key id needed by frontend checkout
+    private String keyId;
+    // For Razorpay: this is the created order id (order_xxx)
+    private String orderId;
     private Long amount;
     private String currency;
 }

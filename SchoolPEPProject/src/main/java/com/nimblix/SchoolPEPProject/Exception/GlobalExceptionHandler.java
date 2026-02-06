@@ -35,6 +35,7 @@ public class GlobalExceptionHandler {
     // 400 - Bad request (invalid inputs)
     @ExceptionHandler({
             IllegalArgumentException.class,
+            PaymentException.class,
             MissingServletRequestParameterException.class
     })
     public ResponseEntity<Map<String, Object>> handleBadRequest(Exception ex) {

@@ -41,9 +41,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .orElseThrow(() ->
                                 new UsernameNotFoundException("Active user not found"));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new CustomUserDetails(
                 user.getEmailId(),
                 user.getPassword(),
+                user.getSchoolId(),
                 List.of(new SimpleGrantedAuthority(
                         "ROLE_" + user.getRole().getRoleName()
                 ))
